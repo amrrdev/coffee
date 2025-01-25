@@ -1,6 +1,8 @@
 import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { Coffee } from './entities/coffees.entity';
 import { CreateCoffeeDto } from './dto/create-coffee.dto';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class CoffeesService {
@@ -12,6 +14,8 @@ export class CoffeesService {
       flavors: ['chocolate'],
     },
   ];
+
+  constructor(@InjectRepository(Coffee) private readonly coffeeRepository: Repository<Coffee>) {}
 
   findAll() {
     return this.coffees;
