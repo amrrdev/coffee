@@ -1,4 +1,4 @@
-import { Inject, Module } from '@nestjs/common';
+import { Inject, Module, ValidationPipe } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CoffeesModule } from './coffees/coffees.module';
@@ -7,6 +7,8 @@ import { CoffeeRatingModule } from './coffee-rating/coffee-rating.module';
 import { ConfigModule, ConfigType } from '@nestjs/config';
 import * as Joi from 'joi';
 import databaseConfig from './config/database.config';
+import { APP_FILTER, APP_PIPE } from '@nestjs/core';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 
 @Module({
   imports: [
@@ -38,6 +40,12 @@ import databaseConfig from './config/database.config';
     CoffeeRatingModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
+  ],
 })
 export class AppModule {}
